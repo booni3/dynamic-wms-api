@@ -2,6 +2,7 @@
 
 namespace Booni3\DynamicWms;
 
+use Booni3\Linnworks\Linnworks;
 use Illuminate\Support\ServiceProvider;
 
 class DynamicWmsServiceProvider extends ServiceProvider
@@ -11,36 +12,10 @@ class DynamicWmsServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        /*
-         * Optional methods to load your package assets
-         */
-        // $this->loadTranslationsFrom(__DIR__.'/../resources/lang', 'dynamic-wms');
-        // $this->loadViewsFrom(__DIR__.'/../resources/views', 'dynamic-wms');
-        // $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
-        // $this->loadRoutesFrom(__DIR__.'/routes.php');
-
         if ($this->app->runningInConsole()) {
             $this->publishes([
                 __DIR__.'/../config/config.php' => config_path('dynamic-wms.php'),
             ], 'config');
-
-            // Publishing the views.
-            /*$this->publishes([
-                __DIR__.'/../resources/views' => resource_path('views/vendor/dynamic-wms'),
-            ], 'views');*/
-
-            // Publishing assets.
-            /*$this->publishes([
-                __DIR__.'/../resources/assets' => public_path('vendor/dynamic-wms'),
-            ], 'assets');*/
-
-            // Publishing the translation files.
-            /*$this->publishes([
-                __DIR__.'/../resources/lang' => resource_path('lang/vendor/dynamic-wms'),
-            ], 'lang');*/
-
-            // Registering package commands.
-            // $this->commands([]);
         }
     }
 
@@ -52,9 +27,12 @@ class DynamicWmsServiceProvider extends ServiceProvider
         // Automatically apply the package configuration
         $this->mergeConfigFrom(__DIR__.'/../config/config.php', 'dynamic-wms');
 
-        // Register the main class to use with the facade
-        $this->app->singleton('dynamic-wms', function () {
-            return new DynamicWms;
+        $this->app->singleton(DynamicWms::class, function ($app) {
+            $config = $app->make('config');
+
+            return new DynamicWms($config->get('dynamic-wms'));
         });
+
+        $this->app->alias(DynamicWms::class, 'dynamic-wms');
     }
 }
