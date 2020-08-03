@@ -7,7 +7,7 @@ use GuzzleHttp\Client as GuzzleClient;
 
 class DynamicWms
 {
-    const BASE_URI = 'https://v2.dynamicwms.app/api/v1';
+    const BASE_URI = 'https://v2.dynamicwms.app/api/v1/';
 
     /** @var GuzzleClient */
     protected $client;
@@ -33,6 +33,7 @@ class DynamicWms
     private function makeClient(): GuzzleClient
     {
         return new GuzzleClient([
+            'base_uri' => self::BASE_URI,
             'timeout' => $this->config['timeout'] ?? 15
         ]);
     }

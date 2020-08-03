@@ -14,9 +14,6 @@ class ApiClient
     /** @var string */
     private $bearer;
 
-    /** @var string */
-    private $server;
-
     public function __construct(Client $client, string $bearer = null)
     {
         $this->client = $client;
@@ -26,11 +23,11 @@ class ApiClient
     public function get($url = null, array $parameters = []): array
     {
         return $this->parse(function() use($url, $parameters){
-            return $this->client->get($this->server.$url, [
+            return $this->client->get($url, [
                 'form_params' => $parameters,
                 'headers' => [
                     'Accept' => 'application/json',
-                    'Authorization' => $this->bearer
+                    'Authorization' => 'Bearer '.$this->bearer
                 ]
             ]);
         });
@@ -39,11 +36,11 @@ class ApiClient
     public function post($url = null, array $parameters = []): array
     {
         return $this->parse(function() use($url, $parameters){
-            return $this->client->post($this->server.$url, [
+            return $this->client->post($url, [
                 'form_params' => $parameters,
                 'headers' => [
                     'Accept' => 'application/json',
-                    'Authorization' => $this->bearer ?? ''
+                    'Authorization' => 'Bearer '.$this->bearer
                 ]
             ]);
         });
