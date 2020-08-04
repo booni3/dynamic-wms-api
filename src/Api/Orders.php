@@ -4,14 +4,19 @@ namespace Booni3\DynamicWms\Api;
 
 class Orders extends ApiClient
 {
+    public function getOrders()
+    {
+        return $this->get('order');
+    }
+
     public function getOrder($orderId)
     {
-        return $this->get('get-order/' . $orderId);
+        return $this->get('order/' . $orderId);
     }
 
     public function createOrder(array $params, array $items)
     {
-        return $this->post('create-order', [
+        return $this->post('order', [
             'company_name' => $params['company_name'] ?? '',
             'full_name' => $params['full_name'] ?? '',
             'email' => $params['email'] ?? '',
