@@ -2,6 +2,7 @@
 
 namespace Booni3\DynamicWms;
 
+use Booni3\DynamicWms\Api\Fulfilments;
 use Booni3\DynamicWms\Api\Orders;
 use GuzzleHttp\Client as GuzzleClient;
 
@@ -41,5 +42,10 @@ class DynamicWms
     public function orders(): Orders
     {
         return new Orders($this->client, $this->bearer);
+    }
+
+    public function fulfilments(): Fulfilments
+    {
+        return new Fulfilments($this->client, $this->bearer);
     }
 }
