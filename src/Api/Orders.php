@@ -14,6 +14,13 @@ class Orders extends ApiClient
         return $this->get('order/' . $orderId);
     }
 
+    public function getOrderByReference($orderRef)
+    {
+        return $this->get('get-order-by-ref',[
+            'order_reference' => $orderRef
+        ]);
+    }
+
     public function createOrder(array $params, array $items)
     {
         return $this->post('order', [

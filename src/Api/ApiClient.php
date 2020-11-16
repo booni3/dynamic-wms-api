@@ -24,7 +24,7 @@ class ApiClient
     {
         return $this->parse(function() use($url, $parameters){
             return $this->client->get($url, [
-                'form_params' => $parameters,
+                'query' => $parameters,
                 'headers' => [
                     'Accept' => 'application/json',
                     'Authorization' => 'Bearer '.$this->bearer
