@@ -6,7 +6,7 @@ class Deliveries extends ApiClient
 {
     public function getDeliveries()
     {
-        return $this->get('order');
+        return $this->get('delivery');
     }
 
     public function getDelivery($deliveryId)
