@@ -20,7 +20,7 @@ class Deliveries extends ApiClient
             'delivery_type' => $params['delivery_type'] ?? '',
             'supplier_name' => $params['supplier_name'] ?? '',
             'carrier_name' => $params['carrier_name'] ?? '',
-            'supplier_ref' => $params['merchant_ref'] ?? '',
+            'supplier_ref' => $params['supplier_ref'] ?? '',
             'merchant_ref' => $params['merchant_ref'] ?? '',
             'expected_at' => $params['expected_at'] ?? '',
             'items' => $items
