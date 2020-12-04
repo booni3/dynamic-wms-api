@@ -6,6 +6,6 @@ class Fulfilments extends ApiClient
 {
     public function getFulfilments($page = 1)
     {
-        return $this->get("fulfilments?page=$page");
+        return $this->get("fulfilments", compact('page'));
     }
 }
