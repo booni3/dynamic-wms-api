@@ -4,9 +4,9 @@ namespace Booni3\DynamicWms\Api;
 
 class Orders extends ApiClient
 {
-    public function getOrders()
+    public function getOrders($page = 1)
     {
-        return $this->get('order');
+        return $this->get('order', compact('page'));
     }
 
     public function getOrder($orderId)

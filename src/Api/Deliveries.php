@@ -4,9 +4,9 @@ namespace Booni3\DynamicWms\Api;
 
 class Deliveries extends ApiClient
 {
-    public function getDeliveries()
+    public function getDeliveries($page = 1)
     {
-        return $this->get('delivery');
+        return $this->get('delivery', compact('page'));
     }
 
     public function getDelivery($deliveryId)
