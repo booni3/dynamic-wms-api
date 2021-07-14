@@ -43,6 +43,8 @@ class Orders extends ApiClient
             'received_at' => $params['received_at'] ?? '',
             'earliest_ship_date' => $params['earliest_ship_date'] ?? '',
             'latest_ship_date' => $params['latest_ship_date'] ?? '',
+            'invoice_terms' => $params['invoice_terms'] ?? '',
+            'importer_tax_id' => $params['importer_tax_id'] ?? '',
             'items' => $items
         ]);
     }
