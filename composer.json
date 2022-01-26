@@ -16,8 +16,7 @@
         }
     ],
     "require": {
-        "php": "^7.1",
-        "illuminate/support": "^5.0 | ^6.0"
+        "php": "^7.1|^8.0"
     },
     "require-dev": {
         "orchestra/testbench": "^4.0",
@@ -40,15 +39,5 @@
     },
     "config": {
         "sort-packages": true
-    },
-    "extra": {
-        "laravel": {
-            "providers": [
-                "Booni3\\DynamicWms\\DynamicWmsServiceProvider"
-            ],
-            "aliases": {
-                "DynamicWms": "Booni3\\DynamicWms\\DynamicWmsFacade"
-            }
-        }
     }
 }
