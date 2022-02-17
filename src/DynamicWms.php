@@ -40,6 +40,11 @@ class DynamicWms
         ]);
     }
 
+    public function client(): ApiClient
+    {
+        return new ApiClient($this->client, $this->bearer);
+    }
+
     public function orders(): Orders
     {
         return new Orders($this->client, $this->bearer);
