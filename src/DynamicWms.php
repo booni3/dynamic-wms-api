@@ -5,6 +5,7 @@ namespace Booni3\DynamicWms;
 use Booni3\DynamicWms\Api\Deliveries;
 use Booni3\DynamicWms\Api\Fulfilments;
 use Booni3\DynamicWms\Api\Orders;
+use Booni3\DynamicWms\Api\ApiClient;
 use GuzzleHttp\Client as GuzzleClient;
 
 class DynamicWms
