@@ -46,6 +46,19 @@ class ApiClient
         });
     }
 
+    public function put($url = null, array $parameters = []): array
+    {
+        return $this->parse(function() use($url, $parameters){
+            return $this->client->put($url, [
+                'form_params' => $parameters,
+                'headers' => [
+                    'Accept' => 'application/json',
+                    'Authorization' => 'Bearer '.$this->bearer
+                ]
+            ]);
+        });
+    }
+
     private function parse(callable $callback)
     {
         $response = call_user_func($callback);

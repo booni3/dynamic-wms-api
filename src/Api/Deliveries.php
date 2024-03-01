@@ -26,4 +26,17 @@ class Deliveries extends ApiClient
             'items' => $items
         ]);
     }
+    public function updateDelivery($deliveryId, array $params)
+    {
+        $payload = [
+            'supplier_name' => $params['supplier_name'] ?? null,
+            'carrier_name' => $params['carrier_name'] ?? null,
+            'supplier_ref' => $params['supplier_ref'] ?? null,
+            'merchant_ref' => $params['merchant_ref'] ?? null,
+            'expected_at' => $params['expected_at'] ?? null,
+            'expected_at_state' => $params['expected_at_state'] ?? null,
+        ];
+
+        return $this->put("delivery/$deliveryId", array_filter($payload, fn($row) => $row !== null));
+    }
 }
