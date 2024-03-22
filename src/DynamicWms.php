@@ -6,6 +6,7 @@ use Booni3\DynamicWms\Api\Deliveries;
 use Booni3\DynamicWms\Api\Fulfilments;
 use Booni3\DynamicWms\Api\Orders;
 use Booni3\DynamicWms\Api\ApiClient;
+use Booni3\DynamicWms\Api\Returns;
 use GuzzleHttp\Client as GuzzleClient;
 
 class DynamicWms
@@ -59,5 +60,10 @@ class DynamicWms
     public function deliveries(): Deliveries
     {
         return new Deliveries($this->client, $this->bearer);
+    }
+
+    public function returns(): Returns
+    {
+        return new Returns($this->client, $this->bearer);
     }
 }
