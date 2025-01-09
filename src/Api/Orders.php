@@ -40,6 +40,7 @@ class Orders extends ApiClient
             'sub_source' => $params['sub_source'] ?? '',
             'shipping_service' => $params['shipping_service'] ?? '',
             'shipping_note' => $params['shipping_note'] ?? '',
+            'pick_note' => $params['pick_note'] ?? '',
             'received_at' => $params['received_at'] ?? '',
             'earliest_ship_date' => $params['earliest_ship_date'] ?? '',
             'latest_ship_date' => $params['latest_ship_date'] ?? '',
