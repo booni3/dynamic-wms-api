@@ -49,4 +49,19 @@ class Orders extends ApiClient
             'items' => $items
         ]);
     }
+
+    public function hold($orderId)
+    {
+        return $this->post('order/' . $orderId . '/hold');
+    }
+
+    public function unhold($orderId)
+    {
+        return $this->post('order/' . $orderId . '/unhold');
+    }
+
+    public function cancel($orderId)
+    {
+        return $this->post('order/' . $orderId . '/cancel');
+    }
 }
