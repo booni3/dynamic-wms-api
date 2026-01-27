@@ -46,7 +46,8 @@ class Orders extends ApiClient
             'latest_ship_date' => $params['latest_ship_date'] ?? '',
             'invoice_terms' => $params['invoice_terms'] ?? '',
             'importer_tax_id' => $params['importer_tax_id'] ?? '',
-            'items' => $items
+            'items' => $items,
+            'bundles' => $params['bundles'] ?? null,
         ]);
     }
 
