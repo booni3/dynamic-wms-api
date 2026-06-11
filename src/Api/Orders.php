@@ -65,4 +65,9 @@ class Orders extends ApiClient
     {
         return $this->post('order/' . $orderId . '/cancel');
     }
+
+    public function deleteOrder($orderId)
+    {
+        return $this->delete('order/' . $orderId);
+    }
 }

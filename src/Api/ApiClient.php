@@ -59,9 +59,26 @@ class ApiClient
         });
     }
 
+    public function delete($url = null, array $parameters = []): array
+    {
+        return $this->parse(function() use($url, $parameters){
+            return $this->client->delete($url, [
+                'form_params' => $parameters,
+                'headers' => [
+                    'Accept' => 'application/json',
+                    'Authorization' => 'Bearer '.$this->bearer
+                ]
+            ]);
+        });
+    }
+
     private function parse(callable $callback)
     {
         $response = call_user_func($callback);
+
+        if ($response->getStatusCode() === 204) {
+            return [];
+        }
 
         $json = json_decode((string) $response->getBody(), true);
 
