@@ -23,7 +23,7 @@ class Orders extends ApiClient
 
     public function createOrder(array $params, array $items)
     {
-        return $this->post('order', [
+        $parameters = [
             'company_name' => $params['company_name'] ?? '',
             'full_name' => $params['full_name'] ?? '',
             'email' => $params['email'] ?? '',
@@ -48,7 +48,15 @@ class Orders extends ApiClient
             'importer_tax_id' => $params['importer_tax_id'] ?? '',
             'items' => $items,
             'bundles' => $params['bundles'] ?? null,
-        ]);
+        ];
+
+        if (array_key_exists('customs_declaration', $params)) {
+            $parameters['customs_declaration'] = $params['customs_declaration'];
+
+            return $this->postJson('order', $parameters);
+        }
+
+        return $this->post('order', $parameters);
     }
 
     public function hold($orderId)

@@ -25,10 +25,7 @@ class ApiClient
         return $this->parse(function() use($url, $parameters){
             return $this->client->get($url, [
                 'query' => $parameters,
-                'headers' => [
-                    'Accept' => 'application/json',
-                    'Authorization' => 'Bearer '.$this->bearer
-                ]
+                'headers' => $this->headers()
             ]);
         });
     }
@@ -38,10 +35,17 @@ class ApiClient
         return $this->parse(function() use($url, $parameters){
             return $this->client->post($url, [
                 'form_params' => $parameters,
-                'headers' => [
-                    'Accept' => 'application/json',
-                    'Authorization' => 'Bearer '.$this->bearer
-                ]
+                'headers' => $this->headers()
+            ]);
+        });
+    }
+
+    protected function postJson($url = null, array $parameters = []): array
+    {
+        return $this->parse(function() use($url, $parameters){
+            return $this->client->post($url, [
+                'json' => $parameters,
+                'headers' => $this->headers()
             ]);
         });
     }
@@ -51,10 +55,7 @@ class ApiClient
         return $this->parse(function() use($url, $parameters){
             return $this->client->put($url, [
                 'form_params' => $parameters,
-                'headers' => [
-                    'Accept' => 'application/json',
-                    'Authorization' => 'Bearer '.$this->bearer
-                ]
+                'headers' => $this->headers()
             ]);
         });
     }
@@ -64,12 +65,17 @@ class ApiClient
         return $this->parse(function() use($url, $parameters){
             return $this->client->delete($url, [
                 'form_params' => $parameters,
-                'headers' => [
-                    'Accept' => 'application/json',
-                    'Authorization' => 'Bearer '.$this->bearer
-                ]
+                'headers' => $this->headers()
             ]);
         });
+    }
+
+    private function headers(): array
+    {
+        return [
+            'Accept' => 'application/json',
+            'Authorization' => 'Bearer '.$this->bearer
+        ];
     }
 
     private function parse(callable $callback)

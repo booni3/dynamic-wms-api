@@ -1,0 +1,92 @@
+{
+    "company_name": "Example Customer",
+    "full_name": "Example Customer",
+    "email": "customer@example.com",
+    "telephone": "+15555550100",
+    "address1": "1 Market Street",
+    "address2": "",
+    "town": "San Francisco",
+    "region": "CA",
+    "postcode": "94105",
+    "country_code": "US",
+    "unique_id": "customs-order-1",
+    "order_reference": "ORDER-1",
+    "source": "shopify",
+    "sub_source": "profile-studio",
+    "shipping_service": "international_express",
+    "shipping_note": "",
+    "pick_note": "",
+    "received_at": "2026-09-14T12:00:00+00:00",
+    "earliest_ship_date": "2026-09-15",
+    "latest_ship_date": "2026-09-16",
+    "invoice_terms": "DDP",
+    "importer_tax_id": "",
+    "items": [
+        {
+            "line_id": "physical-line-1",
+            "sku": "DUPLICATE-SKU",
+            "qty": 1,
+            "unit_cost": 100.01
+        },
+        {
+            "line_id": "physical-line-2",
+            "sku": "DUPLICATE-SKU",
+            "qty": 1,
+            "unit_cost": 100.02
+        }
+    ],
+    "bundles": null,
+    "customs_declaration": {
+        "schema_version": 1,
+        "currency": "GBP",
+        "place_of_incoterm": "San Francisco, CA",
+        "export_country_code": "GB",
+        "destination_country_code": "US",
+        "destination_tariff_territory": "US",
+        "export_reason": "sale",
+        "export_reason_type": "permanent",
+        "source": {
+            "system": "profile-studio-ddp",
+            "reference": "accepted-snapshot-1",
+            "integrity_hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        },
+        "taxation": null,
+        "charges": [],
+        "lines": [
+            {
+                "line_id": "physical-line-1",
+                "sku": "DUPLICATE-SKU",
+                "description": "First physical item",
+                "quantity": 1,
+                "unit_value_minor": 10001,
+                "unit_net_weight_grams": 1250,
+                "origin_country_code": "CN",
+                "commodity_codes": [
+                    {
+                        "direction": "inbound",
+                        "tariff_territory": "US",
+                        "system": "HTSUS",
+                        "code": "0123456789"
+                    }
+                ]
+            },
+            {
+                "line_id": "physical-line-2",
+                "sku": "DUPLICATE-SKU",
+                "description": "Second physical item",
+                "quantity": 1,
+                "unit_value_minor": 10002,
+                "unit_net_weight_grams": 750,
+                "origin_country_code": "PL",
+                "commodity_codes": [
+                    {
+                        "direction": "inbound",
+                        "tariff_territory": "US",
+                        "system": "HTSUS",
+                        "code": "9876543210"
+                    }
+                ]
+            }
+        ]
+    }
+}
