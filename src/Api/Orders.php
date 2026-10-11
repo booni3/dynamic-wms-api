@@ -2,6 +2,9 @@
 
 namespace Booni3\DynamicWms\Api;
 
+use Booni3\DynamicWms\Data\CustomsMoney;
+use InvalidArgumentException;
+
 class Orders extends ApiClient
 {
     public function getOrders($page = 1)
@@ -23,6 +26,9 @@ class Orders extends ApiClient
 
     public function createOrder(array $params, array $items)
     {
+        if (array_key_exists('customs_money', $params) && array_key_exists('customs_declaration', $params)) {
+            throw new InvalidArgumentException('Customs money and customs declaration are mutually exclusive.');
+        }
         $parameters = [
             'company_name' => $params['company_name'] ?? '',
             'full_name' => $params['full_name'] ?? '',
@@ -50,6 +56,19 @@ class Orders extends ApiClient
             'bundles' => $params['bundles'] ?? null,
         ];
 
+        if (array_key_exists('customs_money', $params)) {
+            $money = $params['customs_money'];
+            if (is_array($money)) {
+                $money = CustomsMoney::fromArray($money);
+            }
+            if (!$money instanceof CustomsMoney) {
+                throw new InvalidArgumentException('Customs money must be a CustomsMoney object or array.');
+            }
+            $parameters['customs_money'] = $money->toArray();
+
+            return $this->postJson('order', $parameters);
+        }
+
         if (array_key_exists('customs_declaration', $params)) {
             $parameters['customs_declaration'] = $params['customs_declaration'];
 
@@ -57,6 +76,13 @@ class Orders extends ApiClient
         }
 
         return $this->post('order', $parameters);
+    }
+
+    public function acceptedCustomsMoney(array $response): ?CustomsMoney
+    {
+        return isset($response['customs_money'])
+            ? CustomsMoney::fromArray($response['customs_money'])
+            : null;
     }
 
     public function hold($orderId)
