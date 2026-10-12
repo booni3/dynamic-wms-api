@@ -16,8 +16,8 @@ final class CustomsMoney
     public static function fromArray(array $data): self
     {
         self::keys($data, ['schema_version', 'currency', 'source', 'sales', 'delivery']);
-        if ($data['schema_version'] !== 1 || $data['currency'] !== 'GBP') {
-            throw new InvalidArgumentException('Customs money requires schema version 1 and GBP.');
+        if ($data['schema_version'] !== 1 || !in_array($data['currency'], ['GBP', 'EUR'], true)) {
+            throw new InvalidArgumentException('Customs money requires schema version 1 and GBP or EUR.');
         }
         self::object($data['source'], ['system', 'reference', 'integrity_hash']);
         self::text($data['source']['system']);

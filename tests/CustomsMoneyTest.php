@@ -55,6 +55,36 @@ class CustomsMoneyTest extends TestCase
         $this->assertStringNotContainsString('customs_money', (string) $history[1]['request']->getBody());
     }
 
+    public function test_native_eur_is_preserved_in_create_and_read_responses(): void
+    {
+        $history = [];
+        $expected = $this->money();
+        $expected['currency'] = 'EUR';
+        $expected['sales'][0]['net_minor'] = 12434;
+        $expected['sales'][0]['vat_minor'] = 2487;
+        $expected['sales'][0]['gross_minor'] = 14921;
+        $expected['delivery'] = ['net_minor' => 2094, 'vat_minor' => 419, 'gross_minor' => 2513];
+        $input = $expected;
+        $money = CustomsMoney::fromArray($input);
+        $input['currency'] = 'GBP';
+        $input['sales'][0]['net_minor'] = 1;
+        $exported = $money->toArray();
+        $exported['delivery']['net_minor'] = 1;
+        $orders = $this->orders($history, ['customs_money' => $expected]);
+
+        $created = $orders->createOrder(['country_code' => 'FR', 'customs_money' => $money], [
+            ['line_id' => 'a', 'sku' => 'GOODS', 'qty' => 1],
+        ]);
+        $read = $orders->getOrder('accepted-order');
+
+        $body = json_decode((string) $history[0]['request']->getBody(), true);
+        $this->assertSame($expected, $money->toArray());
+        $this->assertSame($expected, $body['customs_money']);
+        $this->assertSame($expected, $orders->acceptedCustomsMoney($created)->toArray());
+        $this->assertSame($expected, $orders->acceptedCustomsMoney($read)->toArray());
+        $this->assertSame('GET', $history[1]['request']->getMethod());
+    }
+
     public function test_money_and_declaration_are_rejected_before_transport(): void
     {
         $history = [];
@@ -83,13 +113,17 @@ class CustomsMoneyTest extends TestCase
     {
         $cases = [];
         foreach ([
-            ['currency', 'EUR'], ['schema_version', '1'], ['sales', []],
+            ['currency', 'USD'], ['currency', null], ['currency', 'eur'], ['currency', 'gbp'],
+            ['schema_version', '1'], ['sales', []],
             ['source', []], ['delivery', null], ['unexpected', true],
         ] as $change) {
             $money = $this->money();
             $money[$change[0]] = $change[1];
             $cases[] = [$money];
         }
+        $money = $this->money();
+        unset($money['currency']);
+        $cases[] = [$money];
         foreach ([['net_minor', 0], ['vat_minor', -1], ['gross_minor', 119], ['net_minor', 100.0]] as $change) {
             $money = $this->money();
             $money['sales'][0][$change[0]] = $change[1];
@@ -108,6 +142,12 @@ class CustomsMoneyTest extends TestCase
         $cases[] = [$money];
         $money = $this->money();
         $money['delivery']['gross_minor'] = 1;
+        $cases[] = [$money];
+        $money['currency'] = 'EUR';
+        $cases[] = [$money];
+        $money = $this->money();
+        $money['currency'] = 'EUR';
+        $money['sales'][0]['gross_minor'] = 119;
         $cases[] = [$money];
         $money = $this->money();
         $money['sales'][0]['net_minor'] = PHP_INT_MAX;
@@ -135,7 +175,7 @@ class CustomsMoneyTest extends TestCase
     {
         $stack = HandlerStack::create(new MockHandler([
             new Response(200, [], json_encode($response)),
-            new Response(200, [], '{}'),
+            new Response(200, [], json_encode($response)),
         ]));
         $stack->push(Middleware::history($history));
 
