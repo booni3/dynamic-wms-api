@@ -56,6 +56,10 @@ class Orders extends ApiClient
             'bundles' => $params['bundles'] ?? null,
         ];
 
+        if (array_key_exists('registration_country_code', $params)) {
+            $parameters['registration_country_code'] = $params['registration_country_code'];
+        }
+
         if (array_key_exists('customs_money', $params)) {
             $money = $params['customs_money'];
             if (is_array($money)) {

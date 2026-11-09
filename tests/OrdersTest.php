@@ -122,6 +122,34 @@ class OrdersTest extends TestCase
         $this->assertSame('order/50264787', (string) $history[0]['request']->getUri());
     }
 
+    public function test_it_forwards_optional_registration_country_for_json_and_form_orders(): void
+    {
+        foreach ([false, true] as $json) {
+            foreach (['IE', null] as $country) {
+                $history = [];
+                $orders = $this->ordersWithResponses([new Response(200, [], '{}')], $history);
+                $params = ['registration_country_code' => $country, 'importer_tax_id' => 'IM0000000000'];
+                if ($json) {
+                    $params['customs_declaration'] = $this->customsOrderFixture()['customs_declaration'];
+                }
+                $orders->createOrder($params, []);
+                $raw = (string) $history[0]['request']->getBody();
+                if ($json) {
+                    $body = json_decode($raw, true);
+                    $this->assertArrayHasKey('registration_country_code', $body);
+                    $this->assertSame($country, $body['registration_country_code']);
+                } else {
+                    parse_str($raw, $body);
+                    if ($country === null) {
+                        $this->assertArrayNotHasKey('registration_country_code', $body);
+                    } else {
+                        $this->assertSame($country, $body['registration_country_code']);
+                    }
+                }
+            }
+        }
+    }
+
     private function ordersWithResponses(array $responses, array &$history): Orders
     {
         $mock = new MockHandler($responses);
