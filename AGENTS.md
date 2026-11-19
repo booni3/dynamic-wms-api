@@ -1,6 +1,6 @@
-# CLAUDE.md
+# Agent Runtime Rules
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+Project-specific rules for agents working in this API client repository.
 
 ## Project Overview
 

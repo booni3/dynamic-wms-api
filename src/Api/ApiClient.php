@@ -60,6 +60,16 @@ class ApiClient
         });
     }
 
+    protected function putJson($url = null, array $parameters = []): array
+    {
+        return $this->parse(function() use($url, $parameters){
+            return $this->client->put($url, [
+                'json' => $parameters,
+                'headers' => $this->headers()
+            ]);
+        });
+    }
+
     public function delete($url = null, array $parameters = []): array
     {
         return $this->parse(function() use($url, $parameters){

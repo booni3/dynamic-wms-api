@@ -150,6 +150,73 @@ class OrdersTest extends TestCase
         }
     }
 
+    public function test_it_forwards_service_due_dates_for_each_create_encoding(): void
+    {
+        foreach (['form', 'declaration', 'money'] as $encoding) {
+            $history = [];
+            $orders = $this->ordersWithResponses([new Response(200, [], '{}')], $history);
+            $params = ['service_due_date' => '2026-12-01'];
+            if ($encoding === 'declaration') {
+                $params['customs_declaration'] = $this->customsOrderFixture()['customs_declaration'];
+            } elseif ($encoding === 'money') {
+                $params['customs_money'] = [
+                    'schema_version' => 1,
+                    'currency' => 'GBP',
+                    'source' => ['system' => 'test', 'reference' => 'order-1', 'integrity_hash' => 'sha256:'.str_repeat('a', 64)],
+                    'sales' => [[
+                        'sale_line_id' => 'sale-1', 'net_minor' => 100, 'vat_minor' => 20, 'gross_minor' => 120,
+                        'physical_lines' => [['line_id' => 'line-1', 'sku' => 'GOODS', 'quantity' => 1]],
+                    ]],
+                    'delivery' => ['net_minor' => 0, 'vat_minor' => 0, 'gross_minor' => 0],
+                ];
+            }
+
+            $orders->createOrder($params, []);
+
+            $request = $history[0]['request'];
+            if ($encoding === 'form') {
+                parse_str((string) $request->getBody(), $body);
+            } else {
+                $body = json_decode((string) $request->getBody(), true);
+            }
+            $this->assertSame('2026-12-01', $body['service_due_date']);
+        }
+    }
+
+    public function test_it_omits_an_absent_service_due_date_from_create(): void
+    {
+        $history = [];
+        $orders = $this->ordersWithResponses([new Response(200, [], '{}')], $history);
+
+        $orders->createOrder([], []);
+
+        parse_str((string) $history[0]['request']->getBody(), $body);
+        $this->assertArrayNotHasKey('service_due_date', $body);
+    }
+
+    public function test_it_preserves_date_changes_null_clears_and_omission_in_json_order_updates(): void
+    {
+        foreach ([
+            ['service_due_date' => '2026-12-01'],
+            ['service_due_date' => null],
+            ['address1' => '10 Example Street'],
+            ['address1' => '10 Example Street', 'service_due_date' => '2026-12-02'],
+            ['address1' => '10 Example Street', 'service_due_date' => null],
+        ] as $params) {
+            $history = [];
+            $orders = $this->ordersWithResponses([new Response(200, [], '{"id":50264787}')], $history);
+
+            $result = $orders->updateOrder(50264787, $params);
+
+            $request = $history[0]['request'];
+            $this->assertSame(['id' => 50264787], $result);
+            $this->assertSame('PUT', $request->getMethod());
+            $this->assertSame('order/50264787', (string) $request->getUri());
+            $this->assertSame('application/json', $request->getHeaderLine('Content-Type'));
+            $this->assertSame($params, json_decode((string) $request->getBody(), true));
+        }
+    }
+
     private function ordersWithResponses(array $responses, array &$history): Orders
     {
         $mock = new MockHandler($responses);

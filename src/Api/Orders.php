@@ -60,6 +60,10 @@ class Orders extends ApiClient
             $parameters['registration_country_code'] = $params['registration_country_code'];
         }
 
+        if (array_key_exists('service_due_date', $params)) {
+            $parameters['service_due_date'] = $params['service_due_date'];
+        }
+
         if (array_key_exists('customs_money', $params)) {
             $money = $params['customs_money'];
             if (is_array($money)) {
@@ -87,6 +91,11 @@ class Orders extends ApiClient
         return isset($response['customs_money'])
             ? CustomsMoney::fromArray($response['customs_money'])
             : null;
+    }
+
+    public function updateOrder($orderId, array $params)
+    {
+        return $this->putJson('order/' . $orderId, $params);
     }
 
     public function hold($orderId)
